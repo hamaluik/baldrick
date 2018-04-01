@@ -1,0 +1,14 @@
+-cp src
+
+baldrick.Component
+baldrick.ComponentTypeID
+baldrick.Universe
+baldrick.Entity
+baldrick.Phase
+baldrick.View
+baldrick.ViewData
+
+-xml bin/dox.xml
+
+--next
+-cmd haxelib run dox -i bin -o docs --title "baldrick" --toplevel-package "baldrick" -D version "0.1.0" -D source-path "https://github.com/BlazingMammothGames/baldrick/tree/master/src" -D description "Entity-component-system (ECS) framework, based heavily on edge."
