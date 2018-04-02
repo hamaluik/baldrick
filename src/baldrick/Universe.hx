@@ -57,4 +57,14 @@ class Universe {
     public function createPhase():Phase {
         return new Phase(this);
     }
+
+    /**
+      Unmatch and delete all entities from this universe
+    */
+    public function destroyAllEntities():Void {
+        for(entity in entities) {
+            unmatch(entity);
+        }
+        entities = new Array<Entity>();
+    }
 }
