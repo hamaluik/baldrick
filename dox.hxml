@@ -8,6 +8,8 @@ baldrick.Phase
 baldrick.View
 baldrick.ViewData
 
+-D profiling
+
 -xml bin/dox.xml
 
 --next

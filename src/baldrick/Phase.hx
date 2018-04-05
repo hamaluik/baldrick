@@ -16,11 +16,15 @@ class Phase {
     #if profiling
     /**
       The total time taken to run this phase
+
+      **Note:** only generated when `profiling` is defined
     */
     public var profileTime(default, null):Float = 0.0;
     
     /**
       The times of each individual processor
+
+      **Note:** only generated when `profiling` is defined
     */
     public var processorTimes(default, null):haxe.ds.StringMap<Float> = new haxe.ds.StringMap<Float>();
     #end
