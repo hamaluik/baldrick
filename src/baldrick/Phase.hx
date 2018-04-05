@@ -13,6 +13,18 @@ class Phase {
     */
     public var processors:Array<Processor>;
 
+    #if profiling
+    /**
+      The total time taken to run this phase
+    */
+    public var profileTime(default, null):Float = 0.0;
+    
+    /**
+      The times of each individual processor
+    */
+    public var processorTimes(default, null):haxe.ds.StringMap<Float> = new haxe.ds.StringMap<Float>();
+    #end
+
     public function new(Universe:Universe) {
         this.Universe = Universe;
         processors = new Array<Processor>();
@@ -35,9 +47,20 @@ class Phase {
       Call `process` on all grouped processors
     */
     public function process():Void {
+        #if profiling
+        var startT:Float = haxe.Timer.stamp();
+        #end
         for(processor in processors) {
+            #if profiling
+            processor.profileProcess();
+            processorTimes.set(processor.profileName, processor.profileTime);
+            #else
             processor.process();
+            #end
         }
+        #if profiling
+        profileTime = haxe.Timer.stamp() - startT;
+        #end
     }
 
     /**

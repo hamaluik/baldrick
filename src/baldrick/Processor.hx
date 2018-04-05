@@ -28,4 +28,10 @@ interface Processor {
       in the `View`s. Application logic goes here.
     */
     public function process():Void;
+
+    #if profiling
+    public var profileName(default, null):String;
+    public var profileTime(default, null):Float;
+    public function profileProcess():Void;
+    #end
 }

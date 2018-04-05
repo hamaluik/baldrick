@@ -62,9 +62,29 @@ class Main {
             new Velocity(1.0, -0.5)
         ]);
         
+        #if profiling
+        var physicsTime:Float = 0;
+        var renderTime:Float = 0;
+        #end
         for(i in 0...5) {
             physics.process();
             render.process();
+
+            #if profiling
+            physicsTime += physics.profileTime;
+            renderTime += render.profileTime;
+            #end
         }
+
+        #if profiling
+        physicsTime /= 5;
+        renderTime /= 5;
+        trace('Average physics time: ' + Math.round(physicsTime * 1000 * 100) / 100 + ' ms');
+        trace('Average render time: ' + Math.round(renderTime * 1000 * 100) / 100 + ' ms');
+
+        trace('Processor times');
+        trace(physics.processorTimes);
+        trace(render.processorTimes);
+        #end
     }
 }

@@ -1,4 +1,5 @@
 -cp src
 -cp sample
 -main Main
+-D profiling
 -js bin/sample.js

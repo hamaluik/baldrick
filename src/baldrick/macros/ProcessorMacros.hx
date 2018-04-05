@@ -213,6 +213,10 @@ class ProcessorMacros {
             });
         }
 
+        #if profiling
+        fields = injectProfiling(fields);
+        #end
+
         return fields;
     }
 
@@ -250,4 +254,47 @@ class ProcessorMacros {
             pos: Context.currentPos()
         };
     }
+
+    #if profiling
+    private static function injectProfiling(fields:Array<Field>):Array<Field> {
+        fields.push({
+            name: 'profileName',
+            access: [Access.APublic],
+            meta: null,
+            pos: Context.currentPos(),
+            doc: 'Auto-generated variable holding the class name of this processor',
+            kind: FieldType.FProp("default", "null", macro:String, macro $v{Context.getLocalClass().get().pack.join(".") + "." + Context.getLocalClass().get().name})
+        });
+
+        fields.push({
+            name: 'profileTime',
+            access: [Access.APublic],
+            meta: null,
+            pos: Context.currentPos(),
+            doc: 'Auto-generated variable holding the timing information',
+            kind: FieldType.FProp("default", "null", macro:Float)
+        });
+
+        var profileFunc:Function = {
+            expr: macro {
+                var fStart:Float = haxe.Timer.stamp();
+                process();
+                profileTime = haxe.Timer.stamp() - fStart;
+            },
+            ret: macro:Void,
+            args:[]
+        };
+
+        fields.push({
+            name: 'profileProcess',
+            access: [Access.APublic, Access.AInline],
+            meta: null,
+            pos: Context.currentPos(),
+            doc: 'Auto-generated function for profiling the process function',
+            kind: FieldType.FFun(profileFunc)
+        });
+
+        return fields;
+    }
+    #end
 }
