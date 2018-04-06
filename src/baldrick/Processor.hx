@@ -8,7 +8,7 @@ package baldrick;
 */
 @:autoBuild(baldrick.macros.ProcessorMacros.process())
 @:allow(baldrick.Phase)
-#if turnip
+#if (turnip && !display)
 @:autoBuild(baldrick.macros.Turnip.dumpProcessor())
 #end
 interface Processor {

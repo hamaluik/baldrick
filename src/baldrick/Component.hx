@@ -5,7 +5,7 @@ package baldrick;
   any logic (beyond initialization)
 */
 @:autoBuild(baldrick.macros.ComponentMacros.process())
-#if turnip
+#if (turnip && !display)
 @:autoBuild(baldrick.macros.Turnip.dumpComponent())
 #end
 interface Component {
