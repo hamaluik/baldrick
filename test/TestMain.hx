@@ -77,12 +77,12 @@ class TestMain extends buddy.SingleSuite {
 
             it("its match function should add component views", {
                 var p:ABProcessor = new ABProcessor();
-                var Universe:Universe = new Universe();
-                var e1:Entity = new Entity(Universe, [
+                var universe:Universe = new Universe();
+                var e1:Entity = new Entity(universe, [
                     new CompA(4.2),
                     new CompB(42)
                 ]);
-                var e2:Entity = new Entity(Universe, [
+                var e2:Entity = new Entity(universe, [
                     new CompC('derp')
                 ]);
                 p.match(e1);
@@ -93,12 +93,12 @@ class TestMain extends buddy.SingleSuite {
 
             it("its match function should work with multiple dinstinct views", {
                 var p:ABProcessor = new ABProcessor();
-                var Universe:Universe = new Universe();
-                var e1:Entity = new Entity(Universe, [
+                var universe:Universe = new Universe();
+                var e1:Entity = new Entity(universe, [
                     new CompA(4.2),
                     new CompB(42)
                 ]);
-                var e2:Entity = new Entity(Universe, [
+                var e2:Entity = new Entity(universe, [
                     new CompC('derp')
                 ]);
                 p.match(e1);
@@ -108,15 +108,15 @@ class TestMain extends buddy.SingleSuite {
             });
         });
 
-        describe("using an Universe", {
+        describe("using an universe", {
             it("should auto-match on entity creation/addition", {
-                var Universe:Universe = new Universe();
-                var phase1:Phase = Universe.createPhase();
+                var universe:Universe = new Universe();
+                var phase1:Phase = universe.createPhase();
                 var p:ABProcessor = new ABProcessor();
                 phase1.addProcessor(p);
                 var compA:CompA = new CompA(4.2);
                 var compB:CompB = new CompB(42);
-                var e:Entity = Universe.createEntity([compA, compB]);
+                var e:Entity = universe.createEntity([compA, compB]);
                 phase1.process();
                 compB.b.should.be(17);
             });
@@ -156,6 +156,38 @@ class TestMain extends buddy.SingleSuite {
                     return c.name == "CompA";
                 }).should.be(true);
                 #end
+            });
+        });
+
+        describe("saving and loading entity states", {
+            var universe:Universe;
+
+            beforeAll({
+                universe = new Universe();
+                var phase1:Phase = universe.createPhase();
+                var p:ABProcessor = new ABProcessor();
+                phase1.addProcessor(p);
+                var compA:CompA = new CompA(4.2);
+                var compB:CompB = new CompB(42);
+                var e:Entity = universe.createEntity([compA, compB]);
+            });
+
+            it("should serialize the entities into a string", {
+                var state:String = universe.saveEntities();
+                state.should.not.be(null);
+                (state.length > 0).should.be(true);
+            });
+
+            it("should unserialize from a string", {
+                var state:String = universe.saveEntities();
+                universe.destroyAllEntities();
+                universe.entities.length.should.be(0);
+                universe.loadEntities(state);
+                universe.entities.length.should.be(1);
+                var ca:CompA = universe.entities[0].get(CompA.HashCode());
+                ca.a.should.be(4.2);
+                var cb:CompB = universe.entities[0].get(CompB.HashCode());
+                cb.b.should.be(42);
             });
         });
     }
