@@ -1,4 +1,5 @@
 -cp src
+-D turnip
 -cp test
 -main TestMain
 -lib buddy

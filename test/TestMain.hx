@@ -121,5 +121,42 @@ class TestMain extends buddy.SingleSuite {
                 compB.b.should.be(17);
             });
         });
+
+        describe("using turnip", {
+            it("should generate the turnip.json file", {
+                #if sys
+                sys.FileSystem.exists('turnip.json').should.be(true);
+                #end
+            });
+
+            it("should write an array of the processors to the file", {
+                #if sys
+                var turnip:Dynamic = haxe.Json.parse(sys.io.File.getContent('turnip.json'));
+                var processors:Array<String> = turnip.processors;
+                processors.should.not.be(null);
+                processors.length.should.be(1);
+                processors[0].should.be("ABProcessor");
+                #end
+            });
+
+            it("should write components to the file", {
+                #if sys
+                var turnip:Dynamic = haxe.Json.parse(sys.io.File.getContent('turnip.json'));
+                var components:Array<{
+                    name:String,
+                    properties: {
+                        name:String,
+                        type:String,
+                        def:Dynamic
+                    }
+                }> = turnip.components;
+                components.should.not.be(null);
+                components.length.should.be(3);
+                Lambda.exists(components, function(c) {
+                    return c.name == "CompA";
+                }).should.be(true);
+                #end
+            });
+        });
     }
 }
