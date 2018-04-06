@@ -5,6 +5,9 @@ package baldrick;
   any logic (beyond initialization)
 */
 @:autoBuild(baldrick.macros.ComponentMacros.process())
+#if turnip
+@:autoBuild(baldrick.macros.Turnip.dumpComponent())
+#end
 interface Component {
     /**
       The unique type ID for the component class

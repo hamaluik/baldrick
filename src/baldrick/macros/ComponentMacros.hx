@@ -11,7 +11,7 @@ class ComponentMacros {
     private static var nextComponentTypeID:ComponentTypeID = 0;
     private static var componentTypeMap:StringMap<ComponentTypeID> = new StringMap<ComponentTypeID>();
 
-    public static function process():Array<Field> {
+    macro public static function process():Array<Field> {
         var fields:Array<Field> = Context.getBuildFields();
 
         var typeID:ComponentTypeID = getTypeID(Context.getLocalClass().get().name);
@@ -51,6 +51,9 @@ class ComponentMacros {
     }
 
     private static function getTypeID(className:String):ComponentTypeID {
+        #if display
+        return 0;
+        #else
         if(componentTypeMap.exists(className)) {
             return componentTypeMap.get(className);
         }
@@ -58,5 +61,6 @@ class ComponentMacros {
         componentTypeMap.set(className, nextComponentTypeID);
         nextComponentTypeID++;
         return nextComponentTypeID - 1;
+        #end
     }
 }

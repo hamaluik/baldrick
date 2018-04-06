@@ -8,6 +8,9 @@ package baldrick;
 */
 @:autoBuild(baldrick.macros.ProcessorMacros.process())
 @:allow(baldrick.Phase)
+#if turnip
+@:autoBuild(baldrick.macros.Turnip.dumpProcessor())
+#end
 interface Processor {
     /**
       The `match` function is responsible for maintaining the state

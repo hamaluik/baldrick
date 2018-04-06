@@ -5,7 +5,7 @@
     "classPath": "src",
     "tags": ["cross", "utility"],
     "description": "Entity-component-system (ECS) framework, based heavily on edge",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "releasenote": "Initial version",
     "contributors": ["FuzzyWuzzie"],
     "dependencies": {}

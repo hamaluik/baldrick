@@ -4,7 +4,7 @@ import haxe.macro.Expr;
 import haxe.macro.Context;
 
 class ProcessorMacros {
-    public static function process():Array<Field> {
+    macro public static function process():Array<Field> {
         var fields:Array<Field> = Context.getBuildFields();
 
         var hasMatchField:Bool = false;
@@ -41,6 +41,7 @@ class ProcessorMacros {
         return fields;
     }
 
+    #if !display
     private static function getVarFieldTypeName(field:Field):String {
         return switch(field.kind) {
             case FieldType.FVar(t, e): {
@@ -75,10 +76,12 @@ class ProcessorMacros {
             pos: Context.currentPos()
         };
     }
+    #end
 
     private static function injectMatch(fields:Array<Field>):Array<Field> {
         var body:Array<Expr> = [];
         // BEGIN INDENT HELL
+        #if !display
         for(field in fields) {
             switch(field.kind) {
                 case FieldType.FVar(t, e): {
@@ -152,6 +155,7 @@ class ProcessorMacros {
                 default: {}
             };
         }
+        #end
 
         var matchField:Field = {
             name: 'match',
@@ -189,6 +193,7 @@ class ProcessorMacros {
 
     private static function injectUnmatch(fields:Array<Field>):Array<Field> {
         var viewRemoves:Array<Expr> = [];
+        #if !display
         for(field in fields) {
             switch(field.kind) {
                 case FieldType.FVar(t, e): {
@@ -204,6 +209,7 @@ class ProcessorMacros {
                 default: {}
             }
         }
+        #end
 
         fields.push({
             name: 'unmatch',
@@ -240,6 +246,7 @@ class ProcessorMacros {
 
     private static function injectConstructor(fields:Array<Field>):Array<Field> {
         var initializers:Array<Expr> = [];
+        #if !display
         for(field in fields) {
             switch(field.kind) {
                 case FieldType.FVar(t, e): {
@@ -255,6 +262,7 @@ class ProcessorMacros {
                 default: {}
             }
         }
+        #end
 
         fields.push({
             name: 'new',
