@@ -5,17 +5,18 @@ import processors.*;
 
 class Main {
     public static function main() {
-        var Universe:Universe = new Universe();
-        var physics:Phase = Universe.createPhase();
-        var render:Phase = Universe.createPhase();
+        var universe:Universe = new Universe();
+        var physics:Phase = universe.createPhase();
+        var render:Phase = universe.createPhase();
         physics.addProcessor(new MovementProcessor());
         render.addProcessor(new PrintProcessor());
 
-        Universe.createEntity([
+        universe.createEntity([
             new Position(0, 0),
             new Velocity(1.0, -0.5)
         ]);
         
+        // demo processing & profiling
         #if profiling
         var physicsTime:Float = 0;
         var renderTime:Float = 0;
@@ -40,5 +41,23 @@ class Main {
         trace(physics.processorTimes);
         trace(render.processorTimes);
         #end
+
+        // demo serialization
+        var saveState:String = universe.saveEntities();
+        trace('Saving entities state: ' + saveState);
+
+        universe.destroyAllEntities();
+        trace('Destroyed all entities: ' + universe.entities);
+
+        trace('Loading entities state...');
+        var result:LoadResult = universe.loadEntities(saveState);
+        if(result.match(LoadResult.VersionMismatch)) {
+            trace('WARNING: Version mismatch in saved entity state!');
+        }
+
+        for(i in 0...5) {
+            physics.process();
+            render.process();
+        }
     }
 }

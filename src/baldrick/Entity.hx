@@ -1,25 +1,28 @@
 package baldrick;
 
 import haxe.ds.IntMap;
+import haxe.Serializer;
+import haxe.Unserializer;
 
 /**
   A group of `Component` instances representing a discrete object
 */
+@:allow(baldrick.Universe)
 class Entity {
     private static var _nextId = 0;
     /**
       An auto-generated unique ID
     */
     public var id(default, null):Int;
-    private var Universe:Universe;
+    private var universe:Universe;
 
     private var components:IntMap<Component> = new IntMap<Component>();
 
-    public function new(Universe:Universe, ?components:Array<Component>) {
-        this.Universe = Universe;
+    public function new(universe:Universe, ?components:Array<Component>) {
+        this.universe = universe;
         id = _nextId;
         _nextId++;
-        Universe.entities.push(this);
+        universe.entities.push(this);
         if(components != null) addMany(components);
     }
 
@@ -40,7 +43,7 @@ class Entity {
     */
     public inline function add(component:Component):Entity {
         components.set(component.hashCode(), component);
-        Universe.match(this);
+        universe.match(this);
         return this;
     }
 
@@ -51,7 +54,7 @@ class Entity {
     */
     public inline function addMany(components:Array<Component>):Entity {
         for(c in components) this.components.set(c.hashCode(), c);
-        Universe.match(this);
+        universe.match(this);
         return this;
     }
 
@@ -81,7 +84,7 @@ class Entity {
     */
     public inline function remove(component:Component):Entity {
         components.remove(component.hashCode());
-        Universe.match(this);
+        universe.match(this);
         return this;
     }
 
@@ -92,7 +95,7 @@ class Entity {
     */
     public inline function removeMany(components:Array<Component>):Entity {
         for(c in components) this.components.remove(c.hashCode());
-        Universe.match(this);
+        universe.match(this);
         return this;
     }
 
@@ -103,7 +106,7 @@ class Entity {
     */
     public inline function removeByType(type:ComponentTypeID):Entity {
         components.remove(type);
-        Universe.match(this);
+        universe.match(this);
         return this;
     }
 
@@ -114,15 +117,27 @@ class Entity {
     */
     public inline function removeManyByType(types:Array<ComponentTypeID>):Entity {
         for(t in types) components.remove(t);
-        Universe.match(this);
+        universe.match(this);
         return this;
     }
 
     /**
-      Destroy this entity & remove it from the Universe & all processors
+      Destroy this entity & remove it from the universe & all processors
     */
     public inline function destroy():Void {
-        Universe.entities.remove(this);
-        Universe.unmatch(this);
+        universe.entities.remove(this);
+        universe.unmatch(this);
+    }
+
+    @:keep
+    private function hxSerialize(s:Serializer):Void {
+        s.serialize(id);
+        s.serialize(components);
+    }
+
+    @:keep
+    private function hxUnserialize(u:Unserializer):Void {
+        id = u.unserialize();
+        components = u.unserialize();
     }
 }

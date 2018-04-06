@@ -19,7 +19,7 @@ class Turnip {
 
         var turnip:Dynamic = getDumpFile();
         if(!Reflect.hasField(turnip, 'components')) {
-            turnip.components = {};
+            turnip.components = new Array<{}>();
         }
 
         var properties:Array<ComponentProperty> = new Array<ComponentProperty>();
@@ -44,7 +44,10 @@ class Turnip {
 
         var pack:String = Context.getLocalClass().get().pack.join(".");
         var fqn:String = pack + (pack.length > 0 ? "." : "") + Context.getLocalClass().get().name;
-        Reflect.setField(turnip.components, fqn, properties);
+        turnip.components.push({
+            name: fqn,
+            properties: properties
+        });
         ensureVersion(turnip);
         sys.io.File.saveContent('turnip.json', haxe.Json.stringify(turnip, null, "  "));
 

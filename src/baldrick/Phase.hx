@@ -6,7 +6,7 @@ package baldrick;
 */
 @:allow(baldrick.Universe)
 class Phase {
-    private var Universe:Universe;
+    private var universe:Universe;
 
     /**
       The processors grouped in this phase
@@ -29,10 +29,10 @@ class Phase {
     public var processorTimes(default, null):haxe.ds.StringMap<Float> = new haxe.ds.StringMap<Float>();
     #end
 
-    public function new(Universe:Universe) {
-        this.Universe = Universe;
+    public function new(universe:Universe) {
+        this.universe = universe;
         processors = new Array<Processor>();
-        Universe.phases.push(this);
+        universe.phases.push(this);
     }
 
     private function match(entity:Entity):Void {
@@ -74,7 +74,7 @@ class Phase {
     */
     public function addProcessor(processor:Processor):Phase {
         processors.push(processor);
-        for(entity in Universe.entities) {
+        for(entity in universe.entities) {
             processor.match(entity);
         }
         return this;
