@@ -42,6 +42,7 @@ class Entity {
       @return Entity
     */
     public inline function add(component:Component):Entity {
+        if(component == null) return this;
         components.set(component.hashCode(), component);
         universe.match(this);
         return this;
@@ -53,7 +54,12 @@ class Entity {
       @return Entity
     */
     public inline function addMany(components:Array<Component>):Entity {
-        for(c in components) this.components.set(c.hashCode(), c);
+        for(c in components) {
+            if(c == null) {
+                continue;
+            }
+            this.components.set(c.hashCode(), c);
+        }
         universe.match(this);
         return this;
     }
