@@ -27,6 +27,16 @@ class View<T:{}> {
     public function new() {}
 
     /**
+        Event called when an entity is matched with this view
+     */
+    public var onEntityAdded:Null<Entity->T->Void>;
+
+    /**
+        Event called when an entity is unmatched from this view
+     */
+    public var onEntityRemoved:Null<Entity->T->Void>;
+
+    /**
       Iterate over the matched data views
       @return Iterator<ViewData<T>>
     */
@@ -43,6 +53,9 @@ class View<T:{}> {
     */
     public function set(entity:Entity, data:T):Void {
         matches.set(entity, new ViewData(entity, data));
+        if(onEntityAdded != null) {
+            onEntityAdded(entity, data);
+        }
     }
 
     /**
@@ -52,6 +65,19 @@ class View<T:{}> {
       @param entity The entity we're removing from this match
     */
     public function remove(entity:Entity):Void {
+        if(!matches.exists(entity)) {
+            return;
+        }
+
+        var data:ViewData<T> = matches.get(entity);
+        var rawData:T = null;
+        if(data != null) {
+            rawData = data.data;
+        }
+        if(onEntityRemoved != null) {
+            onEntityRemoved(entity, rawData);
+        }
+
         matches.remove(entity);
     }
 }
