@@ -10,4 +10,6 @@ class Position implements Component {
         this.x = x;
         this.y = y;
     }
+
+    public inline function typeID():Int { return 0; }
 }

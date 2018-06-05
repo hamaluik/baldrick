@@ -10,4 +10,6 @@ class Velocity implements Component {
         this.vx = vx;
         this.vy = vy;
     }
+
+    public inline function typeID():Int { return 1; }
 }

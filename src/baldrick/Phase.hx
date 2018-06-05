@@ -35,18 +35,6 @@ class Phase {
         universe.phases.push(this);
     }
 
-    private function match(entity:Entity):Void {
-        for(processor in processors) {
-            processor.match(entity);
-        }
-    }
-
-    private function unmatch(entity:Entity):Void {
-        for(processor in processors) {
-            processor.unmatch(entity);
-        }
-    }
-
     /**
       Call `process` on all grouped processors
     */
@@ -74,9 +62,6 @@ class Phase {
     */
     public function addProcessor(processor:Processor):Phase {
         processors.push(processor);
-        for(entity in universe.entities) {
-            processor.match(entity);
-        }
         return this;
     }
 }
