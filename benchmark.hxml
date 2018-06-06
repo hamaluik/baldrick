@@ -10,7 +10,7 @@
 #-D HXCPP_DEBUG_LINK
 #-D HXCPP_VERBOSE=1
 
-#-js bin/benchmark.js
--cpp bin/benchmark
+-js bin/benchmark.js
+#-cpp bin/benchmark
 #-hl bin/benchmark.hl
 #--interp
