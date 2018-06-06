@@ -96,7 +96,7 @@ class ProcessorMacros {
                                                     // figure out the anonymous type of the object
                                                     var ifNotHasExprs:Array<Expr> = [];
                                                     var ifHasExprs:Array<Expr> = [];
-                                                    var objExprs:Array<{field:String, expr:Expr}> = [];
+                                                    var objExprs:Array<ObjectField> = [];
                                                     for(tField in tFields) {
                                                         var compClassName:String = getVarFieldTypeName(tField);
                                                         var compClassID:Int = ComponentMacros.getTypeID(compClassName);
