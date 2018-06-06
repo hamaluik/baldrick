@@ -1,0 +1,7 @@
+-cp src
+-cp benchmark
+-main Main
+
+#-js bin/benchmark.js
+#-hl bin/benchmark.hl
+-cpp bin/benchmark

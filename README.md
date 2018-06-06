@@ -108,3 +108,11 @@ class Main {
     }
 }
 ```
+
+### Benchmarks
+
+| Target | Entity Creation (µs/entity) | Processor Time (µ/iteration) |
+|--------|----------------------------:|-----------------------------:|
+| JS     |                        1.10 |                         0.70 |
+| HL     |                        1.80 |                         0.11 |
+| CPP    |                        0.15 |                         0.13 |
