@@ -51,13 +51,13 @@ class Universe {
         }
     }
 
-    inline function onComponentsAdded(entity:Entity):Void {
+    public function onComponentsAdded(entity:Entity):Void {
         for(view in views) {
             view.onComponentsAdded(entity);
         }
     }
 
-    inline function onComponentsRemoved(entity:Entity):Void {
+    public function onComponentsRemoved(entity:Entity):Void {
         for(view in views) {
             view.onComponentsRemoved(entity);
         }

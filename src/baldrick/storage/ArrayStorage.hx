@@ -1,38 +1,49 @@
 package baldrick.storage;
 
-import haxe.ds.IntMap;
 import haxe.Constraints;
 import baldrick.Universe;
 import baldrick.Component;
 import baldrick.Storage;
+import baldrick.Entity;
 
 @:generic
-class HashMapStorage<T:(Component, Constructible<Void->Void>)> implements Storage<T> {
-    private var map:IntMap<T>;
+class ArrayStorage<T:(Component, Constructible<Void->Void>)> implements Storage<T> {
+    private var vec:Array<T>;
 
     public function new() {
-        map = new IntMap<T>();
+        vec = new Array<T>();
     }
 
     public function has(entity:Entity):Bool {
-        return map.exists(entity);
+        return vec[entity] != null;
     }
 
     public function get(entity:Entity):T {
-        return map.get(entity);
+        return vec[entity];
     }
 
     public function addTo(universe:Universe, entity:Entity, notifyUniverse:Bool=true):T {
-        map.set(entity, new T());
+        if(entity >= vec.length) {
+            vec.push(new T());
+        }
+        else {
+            vec[entity] = new T();
+        }
         if(notifyUniverse) {
             universe.onComponentsAdded(entity);
         }
-        return map.get(entity);
+        return vec[entity];
     }
 
     public function removeFrom(universe:Universe, entity:Entity, notifyUniverse:Bool=true):Void {
-        if(map.remove(entity) && notifyUniverse) {
+        var existed:Bool = has(entity);
+        vec[entity] = null;
+        if(notifyUniverse && existed) {
             universe.onComponentsRemoved(entity);
         }
+    }
+
+    public function storageSize():Int {
+         return vec.length;
     }
 }
