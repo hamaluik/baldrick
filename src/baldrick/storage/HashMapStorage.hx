@@ -2,6 +2,7 @@ package baldrick.storage;
 
 import haxe.ds.IntMap;
 import haxe.Constraints;
+import baldrick.Universe;
 import baldrick.Component;
 import baldrick.Storage;
 
@@ -21,12 +22,15 @@ class HashMapStorage<T:(Component, Constructible<Void->Void>)> implements Storag
         return map.get(entity);
     }
 
-    public function create(entity:Entity):T {
+    public function addTo(universe:Universe, entity:Entity):T {
         map.set(entity, new T());
+        universe.onComponentsAdded(entity);
         return map.get(entity);
     }
 
-    public function destroy(entity:Entity):Void {
-        map.remove(entity);
+    public function removeFrom(universe:Universe, entity:Entity):Void {
+        if(map.remove(entity)) {
+            universe.onComponentsRemoved(entity);
+        }
     }
 }

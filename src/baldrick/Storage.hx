@@ -1,9 +1,11 @@
 package baldrick;
 
+import haxe.Constraints;
+
 @:generic
-interface Storage<T:Component> {
+interface Storage<T:Constructible<Void->Void>> {
     public function has(entity:Entity):Bool;
     public function get(entity:Entity):T;
-    public function create(entity:Entity):T;
-    public function destroy(entity:Entity):Void;
+    public function addTo(universe:Universe, entity:Entity):T;
+    public function removeFrom(universe:Universe, entity:Entity):Void;
 }

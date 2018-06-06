@@ -1,5 +1,4 @@
 package baldrick;
 
-interface Component {
-    public function typeID():ComponentType;
-}
+@:autoBuild(baldrick.macros.ComponentMacros.ensureConstructor())
+interface Component {}

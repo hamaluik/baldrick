@@ -4,12 +4,8 @@ package baldrick;
   A collection of processors which will be processed
   together in a single `process` call.
 */
-@:allow(baldrick.Universe)
 class Phase {
-    /**
-      The processors grouped in this phase
-    */
-    public var processors:Array<Processor>;
+    var processors:Array<Processor>;
 
     public function new() {
         processors = new Array<Processor>();
@@ -18,9 +14,9 @@ class Phase {
     /**
       Call `process` on all grouped processors
     */
-    public function process(universe:Universe):Void {
+    inline public function process():Void {
         for(processor in processors) {
-            processor.process(universe);
+            processor.process();
         }
     }
 
@@ -29,7 +25,7 @@ class Phase {
       @param processor the processor to add
       @return Phase
     */
-    public function addProcessor(processor:Processor):Phase {
+    inline public function addProcessor(processor:Processor):Phase {
         processors.push(processor);
         return this;
     }

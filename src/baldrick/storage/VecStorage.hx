@@ -2,6 +2,7 @@ package baldrick.storage;
 
 import haxe.Constraints;
 import haxe.ds.Vector;
+import baldrick.Universe;
 import baldrick.Component;
 import baldrick.Storage;
 import baldrick.Entity;
@@ -14,6 +15,12 @@ class VecStorage<T:(Component, Constructible<Void->Void>)> implements Storage<T>
         vec = new Vector<T>(size);
     }
 
+    function upSize():Void {
+        var newVec:Vector<T> = new Vector<T>(vec.length * 2);
+        Vector.blit(vec, 0, newVec, 0, vec.length);
+        vec = newVec;
+    }
+
     public function has(entity:Entity):Bool {
         return vec[entity] != null;
     }
@@ -22,21 +29,20 @@ class VecStorage<T:(Component, Constructible<Void->Void>)> implements Storage<T>
         return vec[entity];
     }
 
-    public function create(entity:Entity):T {
+    public function addTo(universe:Universe, entity:Entity):T {
         if(entity >= vec.length) {
             upSize();
         }
         vec[entity] = new T();
+        universe.onComponentsAdded(entity);
         return vec[entity];
     }
 
-    public function destroy(entity:Entity):Void {
+    public function removeFrom(universe:Universe, entity:Entity):Void {
+        var existed:Bool = has(entity);
         vec[entity] = null;
-    }
-
-    function upSize():Void {
-        var newVec:Vector<T> = new Vector<T>(vec.length * 2);
-        Vector.blit(vec, 0, newVec, 0, vec.length);
-        vec = newVec;
+        if(existed) {
+            universe.onComponentsRemoved(entity);
+        }
     }
 }

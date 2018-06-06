@@ -8,5 +8,5 @@ interface Processor {
       Called automatically by `Phase`s to process everything
       in the `View`s. Application logic goes here.
     */
-    public function process(universe:Universe):Void;
+    public function process():Void;
 }

@@ -1,8 +1,6 @@
 -cp src
 -cp sample
 -main Main
--D profiling
--D turnip
 
 #--times
 #-D macro-times

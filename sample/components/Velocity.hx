@@ -1,16 +1,11 @@
 package components;
 
 import baldrick.Component;
+import baldrick.storage.HashMapStorage;
 
 class Velocity implements Component {
-    public var vx:Float;
-    public var vy:Float;
+    public var vx:Float = 0.0;
+    public var vy:Float = 0.0;
 
-    public function new(vx:Float, vy:Float) {
-        this.vx = vx;
-        this.vy = vy;
-    }
-
-    public inline function typeID():Int { return 1; }
-    public inline static function TypeID():Int { return 1; }
+    public static var storage:HashMapStorage<Velocity> = new HashMapStorage<Velocity>();
 }
