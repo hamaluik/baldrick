@@ -1,36 +1,32 @@
 package baldrick;
 
-/**
-  A group of `Entity`s and the `Processor`s that are used
-  to process them in different phases.
-*/
-@:allow(baldrick.Entity)
+import haxe.Constraints;
+
+@:allow(baldrick.View)
 class Universe {
-    /**
-     *  All the components
-     */
-    public var components:Array<Storage<Component>>;
-
-    /**
-      The processor phases that belong to this universe
-    */
-    public var phases:Array<Phase>;
-
+    var phases:Array<Phase>;
+    var components:Array<Storage<Component>>;
     private var entityExistence:Array<Bool>;
+    private var views:Array<View>;
 
     public function new() {
+        this.phases = new Array<Phase>();
         this.components = new Array<Storage<Component>>();
         this.entityExistence = new Array<Bool>();
-        this.phases = new Array<Phase>();
+        this.views = new Array<View>();
     }
 
     // TODO: get type id from component type in a macro?
-    @:generic
-    public function registerComponentType<T>(type:ComponentType, storage:Storage<Component>):Void {
+    // TODO: auto-call this function from somewhere using a macro
+    public function registerComponentType(type:ComponentType, storage:Storage<Component>):Void {
         while(type >= components.length) {
             components.push(null);
         }
         components[type] = storage;
+    }
+
+    public function registerView(requiredTypes:Array<ComponentType>):Void {
+        views.push(new View(this, requiredTypes));
     }
 
     /**
@@ -38,7 +34,7 @@ class Universe {
       @param components An optional list of starting components
       @return Entity
     */
-    public function createEntity(?components:Array<Component>):Entity {
+    public function createEntity(?types:Array<ComponentType>):Entity {
         var newEntityID:Entity = -1;
         for(i in 0...entityExistence.length) {
             if(!entityExistence[i]) {
@@ -55,7 +51,11 @@ class Universe {
         }
 
         if(components != null) {
-            addComponents(newEntityID, components);
+            addComponents(newEntityID, types);
+        }
+
+        for(view in views) {
+            view.onEntityCreated(newEntityID);
         }
 
         return newEntityID;
@@ -63,17 +63,13 @@ class Universe {
 
     public function destroyEntity(entity:Entity):Void {
         if(entity < entityExistence.length) {
+            if(entityExistence[entity]) {
+                for(view in views) {
+                    view.onEntityDestroyed(entity);
+                }
+            }
+
             entityExistence[entity] = false;
-        }
-    }
-
-    public function addComponent(entity:Entity, component:Component):Void {
-        this.components[component.typeID()].set(entity, component);
-    }
-
-    public function addComponents(entity:Entity, components:Array<Component>):Void {
-        for(component in components) {
-            this.components[component.typeID()].set(entity, component);
         }
     }
 
@@ -81,13 +77,44 @@ class Universe {
         return this.components[type].has(entity);
     }
 
+    // TODO: get type id from component type in a macro?
+    @:generic
+    public function getComponentUnsafe<T:Component>(entity:Entity, type:ComponentType):T {
+        return cast(components[type].get(entity));
+    }
+
+    // TODO: auto-calculate the typeID at compile time
+    @:generic
+    public function addComponent<T:Component>(entity:Entity, type:ComponentType):T {
+        var comp:Component = this.components[type].create(entity);
+        for(view in views) {
+            view.onComponentsAdded(entity);
+        }
+        return cast(comp);
+    }
+
+    public function addComponents(entity:Entity, types:Array<ComponentType>):Void {
+        for(type in types) {
+            this.components[type].create(entity);
+        }
+        for(view in views) {
+            view.onComponentsAdded(entity);
+        }
+    }
+
     public function removeComponent(entity:Entity, type:ComponentType):Void {
-        this.components[type].unset(entity);
+        this.components[type].destroy(entity);
+        for(view in views) {
+            view.onComponentsRemoved(entity);
+        }
     }
 
     public function removeComponents(entity:Entity, types:Array<ComponentType>):Void {
         for(type in types) {
-            this.components[type].unset(entity);
+            this.components[type].destroy(entity);
+        }
+        for(view in views) {
+            view.onComponentsRemoved(entity);
         }
     }
 }

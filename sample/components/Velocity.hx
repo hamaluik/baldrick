@@ -12,4 +12,5 @@ class Velocity implements Component {
     }
 
     public inline function typeID():Int { return 1; }
+    public inline static function TypeID():Int { return 1; }
 }
