@@ -5,4 +5,7 @@
 #--times
 #-D macro-times
 
--js bin/sample.js
+#-js bin/sample.js
+#-cpp bin/sample
+#-hl bin/sample.hl
+--interp
