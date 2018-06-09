@@ -3,6 +3,23 @@ package baldrick.macros;
 import haxe.macro.Expr;
 import haxe.macro.Context;
 
+#if (haxe_ver < 4.0)
+/**
+	Represents the field of an object declaration.
+**/
+typedef ObjectField = {
+	/**
+		The name of the field.
+	**/
+	var field : String;
+
+	/**
+		The field expression.
+	**/
+	var expr : Expr;
+}
+#end
+
 class ProcessorMacros {
     macro public static function process():Array<Field> {
         var fields:Array<Field> = Context.getBuildFields();
