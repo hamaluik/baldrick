@@ -79,4 +79,32 @@ class Phase {
         }
         return this;
     }
+
+    /**
+      Remove a processor from this phase
+      @param processor the processor to remove
+      @return Phase
+     */
+    public function removeProcessor(processor:Processor):Phase {
+        for(entity in universe.entities) {
+            processor.unmatch(entity);
+        }
+        processors.remove(processor);
+        return this;
+    }
+
+    public function removeProcessorByType(pid:ProcessorTypeID):Phase {
+        var processor:Processor = null;
+        for(p in processors) {
+            if(p.hashCode() == pid) {
+                processor = p;
+                break;
+            }
+        }
+        if(processor == null) {
+            return this;
+        }
+
+        return removeProcessor(processor);
+    }
 }
