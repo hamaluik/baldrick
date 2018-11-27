@@ -2,6 +2,9 @@ package baldrick.macros;
 
 import haxe.macro.Expr;
 import haxe.macro.Context;
+import haxe.ds.StringMap;
+
+import baldrick.ProcessorTypeID;
 
 #if (haxe_ver < 4.0)
 /**
@@ -21,6 +24,23 @@ typedef ObjectField = {
 #end
 
 class ProcessorMacros {
+    private static var nextProcessorTypeID:ProcessorTypeID = 0;
+    private static var processorTypeMap:StringMap<ProcessorTypeID> = new StringMap<ProcessorTypeID>();
+
+    private static function getTypeID(className:String):ProcessorTypeID {
+        #if display
+        return 0;
+        #else
+        if(processorTypeMap.exists(className)) {
+            return processorTypeMap.get(className);
+        }
+
+        processorTypeMap.set(className, nextProcessorTypeID);
+        nextProcessorTypeID++;
+        return nextProcessorTypeID - 1;
+        #end
+    }
+
     macro public static function process():Array<Field> {
         var fields:Array<Field> = Context.getBuildFields();
 
@@ -50,6 +70,39 @@ class ProcessorMacros {
         if(!hasConstructor) {
             fields = injectConstructor(fields);
         }
+
+        var typeID:Int = getTypeID(Context.getLocalClass().get().name);
+        var kind:FieldType = FieldType.FFun({
+            args: [],
+            params: null,
+            expr: macro { return $v{typeID}; },
+            ret: ComplexType.TPath({
+                name: 'ProcessorTypeID',
+                pack: ['baldrick'],
+                params: null,
+                sub: null
+            })
+        });
+
+        var hashCodeField:Field = {
+            name: 'hashCode',
+            access: [Access.APublic, Access.AInline],
+            meta: null,
+            pos: Context.currentPos(),
+            doc: 'Auto-generated component type ID',
+            kind: kind
+        };
+        fields.push(hashCodeField);
+
+        var staticHashCodeField:Field = {
+            name: 'HashCode',
+            access: [Access.APublic, Access.AStatic, Access.AInline],
+            meta: null,
+            pos: Context.currentPos(),
+            doc: 'Auto-generated component type ID',
+            kind: kind
+        };
+        fields.push(staticHashCodeField);
 
         #if profiling
         fields = injectProfiling(fields);

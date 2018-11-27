@@ -13,6 +13,15 @@ package baldrick;
 #end
 interface Processor {
     /**
+      The unique type ID for the processor class
+
+      **Note:** also generated is a static function
+      `HashCode()` with the same signature and function.
+      @return ProcessorTypeID
+    */
+    public function hashCode():ProcessorTypeID;
+
+    /**
       The `match` function is responsible for maintaining the state
       of all `View` variables in the processor
       @param entity the entity to check `View`s against

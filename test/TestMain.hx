@@ -33,6 +33,16 @@ class ABProcessor implements Processor {
     }
 }
 
+class CProcessor implements Processor {
+    var cs:View<{c:CompC}>;
+
+    public function process():Void {
+        for(c in cs) {
+            c.data.c.c += ".";
+        }
+    }
+}
+
 @:access(baldrick.View)
 @:access(ABProcessor)
 class TestMain extends buddy.SingleSuite {
@@ -52,6 +62,18 @@ class TestMain extends buddy.SingleSuite {
         });
 
         describe("using processors", {
+            it("should auto-generate unique-per-type processor IDs", {
+                var ab:ABProcessor = new ABProcessor();
+                var c:CProcessor = new CProcessor();
+                ab.hashCode().should.not.be(c.hashCode());
+            });
+
+            it("should generate the same ID between instances of the same processor", {
+                var ab:ABProcessor = new ABProcessor();
+                var ab2:ABProcessor = new ABProcessor();
+                ab.hashCode().should.be(ab2.hashCode());
+            });
+
             it("should build a match function", {
                 var p:ABProcessor = new ABProcessor();
                 var e:Entity = new Entity(new Universe(), [
@@ -134,8 +156,9 @@ class TestMain extends buddy.SingleSuite {
                 var turnip:Dynamic = haxe.Json.parse(sys.io.File.getContent('turnip.json'));
                 var processors:Array<String> = turnip.processors;
                 processors.should.not.be(null);
-                processors.length.should.be(1);
-                processors[0].should.be("ABProcessor");
+                processors.length.should.be(2);
+                processors.indexOf("ABProcessor").should.not.be(-1);
+                processors.indexOf("CProcessor").should.not.be(-1);
                 #end
             });
 
