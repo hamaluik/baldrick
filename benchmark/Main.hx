@@ -44,7 +44,7 @@ class Main {
         var universe:Universe = new Universe();
         var movement:Movement = new Movement();
         
-        var numEntities:Int = 10000;
+        var numEntities:Int = 1000000;
         trace('Measuring time to create ${numEntities} entities...');
         var createTime:Float = measure(function() {
             for(i in 0...numEntities) {
@@ -56,7 +56,7 @@ class Main {
         });
         trace('Took ${createTime} s (${createTime * 1000000 / numEntities}) us/entity');
 
-        var numProcesses:Int = 10000;
+        var numProcesses:Int = 1000000;
         trace('Measuring time to process ${numProcesses} times...');
         var processTime:Float = measure(function() {
             for(i in 0...numProcesses) {

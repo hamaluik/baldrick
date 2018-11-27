@@ -1,12 +1,12 @@
 {
-    "name": "glm",
-    "url" : "https://github.com/BlazingMammothGames/baldrick",
+    "name": "baldrick",
+    "url" : "https://github.com/FuzzyWuzzie/baldrick",
     "license": "Apache",
     "classPath": "src",
     "tags": ["cross", "utility"],
     "description": "Entity-component-system (ECS) framework, based heavily on edge",
-    "version": "1.1.0",
-    "releasenote": "Initial version",
+    "version": "1.2.0",
+    "releasenote": "Initial haxelib release",
     "contributors": ["FuzzyWuzzie"],
     "dependencies": {}
   }
