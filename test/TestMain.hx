@@ -3,9 +3,11 @@ using Lambda;
 import baldrick.Universe;
 import baldrick.Phase;
 import baldrick.Component;
+import baldrick.Resource;
 import baldrick.Entity;
 import baldrick.Processor;
 import baldrick.View;
+import haxe.ds.Option;
 
 class CompA implements Component {
     public var a:Float;
@@ -20,6 +22,11 @@ class CompB implements Component {
 class CompC implements Component {
     public var c:String;
     public function new(c:String) { this.c = c; }
+}
+
+class ResA implements Resource {
+    public var i: Int;
+    public function new(i: Int) { this.i = i; }
 }
 
 class ABProcessor implements Processor {
@@ -211,6 +218,45 @@ class TestMain extends buddy.SingleSuite {
                 ca.a.should.be(4.2);
                 var cb:CompB = universe.entities[0].get(CompB.HashCode());
                 cb.b.should.be(42);
+            });
+        });
+
+        describe("using resources", {
+            var universe: Universe;
+
+            beforeAll({
+                universe = new Universe();
+            });
+
+            it("should return none when a resource hasn't been registered / set", {
+                universe.getResource(ResA.HashCode()).should.equal(Option.None);
+            });
+
+            it("should allow you to set and get a resource by its ID", {
+                universe.setResource(new ResA(42));
+                var res = universe.getResource(ResA.HashCode());
+                res.should.not.equal(Option.None);
+                switch(res) {
+                    case Some(res): {
+                        var res: ResA = cast(res);
+                        res.i.should.be(42);
+                    }
+                    default: {}
+                }
+            });
+
+            it("should only keep track of a single resource per type", {
+                universe.setResource(new ResA(42));
+                universe.setResource(new ResA(30));
+                var res = universe.getResource(ResA.HashCode());
+                res.should.not.equal(Option.None);
+                switch(res) {
+                    case Some(res): {
+                        var res: ResA = cast(res);
+                        res.i.should.be(30);
+                    }
+                    default: {}
+                }
             });
         });
     }

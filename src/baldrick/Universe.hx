@@ -1,5 +1,7 @@
 package baldrick;
 
+import haxe.ds.Option;
+import haxe.ds.IntMap;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -34,9 +36,12 @@ class Universe {
     */
     public var phases:Array<Phase>;
 
+    private var resources: IntMap<Resource>;
+
     public function new() {
         this.entities = new Array<Entity>();
         this.phases = new Array<Phase>();
+        this.resources = new IntMap<Resource>();
     }
 
     private function match(entity:Entity):Void {
@@ -84,6 +89,17 @@ class Universe {
             unmatch(entity);
         }
         entities = new Array<Entity>();
+    }
+
+    public function setResource(resource: Resource): Void {
+        resources.set(resource.hashCode(), resource);
+    }
+
+    public function getResource(type: ResourceTypeID): Option<Resource> {
+        if(!resources.exists(type)) {
+            return None;
+        }
+        return Some(resources.get(type));
     }
 
     @:keep
