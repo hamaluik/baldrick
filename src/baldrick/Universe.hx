@@ -90,10 +90,20 @@ class Universe {
         entities = new Array<Entity>();
     }
 
+    /**
+      Store a resource / global component in the Universe
+      @param resource the resource with type to set
+     */
     public function setResource(resource: Resource): Void {
         resources.set(resource.hashCode(), resource);
     }
 
+    /**
+      Get a resource / global component from the Universe. If an instance
+      has not yet been set using `setResource`, this will return `null`
+      @param type the ID of the resource to retrieve: `{ResourceClass}.HashCode()`
+      @return Null<T>
+     */
     public function getResource<T: Resource>(type: ResourceTypeID): Null<T> {
         if(!resources.exists(type)) {
             return null;
