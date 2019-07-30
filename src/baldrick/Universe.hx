@@ -104,11 +104,26 @@ class Universe {
       @param type the ID of the resource to retrieve: `{ResourceClass}.HashCode()`
       @return Null<T>
      */
-    public function getResource<T: Resource>(type: ResourceTypeID): Null<T> {
+    public function getResourceByID<T: Resource>(type: ResourceTypeID): Null<T> {
         if(!resources.exists(type)) {
             return null;
         }
         return cast(resources.get(type));
+    }
+
+    /**
+     * Get a resource / global component from the Universe. If an instance
+     * has not yet been set using `setResource`, this will return `null`
+     * @param cls The class of the resource to retrieve
+     * @return Null<T>
+     */
+    public function getResource<T: Resource>(cls: Class<T>): Null<T> {
+        var hashCodeFunc: Void -> Int = Reflect.field(cls, 'HashCode');
+        var hashCode: Int = hashCodeFunc();
+        if(!resources.exists(hashCode)) {
+            return null;
+        }
+        return cast(resources.get(hashCode));
     }
 
     @:keep

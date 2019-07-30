@@ -228,13 +228,13 @@ class TestMain extends buddy.SingleSuite {
             });
 
             it("should return null when a resource hasn't been registered / set", {
-                var res: ResA = universe.getResource(ResA.HashCode());
+                var res: ResA = universe.getResource(ResA);
                 res.should.be(null);
             });
 
             it("should allow you to set and get a resource by its ID", {
                 universe.setResource(new ResA(42));
-                var res: ResA = universe.getResource(ResA.HashCode());
+                var res: ResA = universe.getResourceByID(ResA.HashCode());
                 res.should.not.be(null);
                 res.i.should.be(42);
             });
@@ -242,7 +242,7 @@ class TestMain extends buddy.SingleSuite {
             it("should only keep track of a single resource per type", {
                 universe.setResource(new ResA(42));
                 universe.setResource(new ResA(30));
-                var res: ResA = universe.getResource(ResA.HashCode());
+                var res: ResA = universe.getResource(ResA);
                 res.should.not.be(null);
                 res.i.should.be(30);
             });
