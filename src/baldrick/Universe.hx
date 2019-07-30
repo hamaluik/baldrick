@@ -1,6 +1,5 @@
 package baldrick;
 
-import haxe.ds.Option;
 import haxe.ds.IntMap;
 import haxe.Serializer;
 import haxe.Unserializer;
@@ -95,11 +94,11 @@ class Universe {
         resources.set(resource.hashCode(), resource);
     }
 
-    public function getResource(type: ResourceTypeID): Option<Resource> {
+    public function getResource<T: Resource>(type: ResourceTypeID): Null<T> {
         if(!resources.exists(type)) {
-            return None;
+            return null;
         }
-        return Some(resources.get(type));
+        return cast(resources.get(type));
     }
 
     @:keep
@@ -167,4 +166,6 @@ class Universe {
 
         return result;
     }
+
+    // TODO: load / save resources
 }

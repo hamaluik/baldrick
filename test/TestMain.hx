@@ -7,7 +7,6 @@ import baldrick.Resource;
 import baldrick.Entity;
 import baldrick.Processor;
 import baldrick.View;
-import haxe.ds.Option;
 
 class CompA implements Component {
     public var a:Float;
@@ -228,35 +227,24 @@ class TestMain extends buddy.SingleSuite {
                 universe = new Universe();
             });
 
-            it("should return none when a resource hasn't been registered / set", {
-                universe.getResource(ResA.HashCode()).should.equal(Option.None);
+            it("should return null when a resource hasn't been registered / set", {
+                var res: ResA = universe.getResource(ResA.HashCode());
+                res.should.be(null);
             });
 
             it("should allow you to set and get a resource by its ID", {
                 universe.setResource(new ResA(42));
-                var res = universe.getResource(ResA.HashCode());
-                res.should.not.equal(Option.None);
-                switch(res) {
-                    case Some(res): {
-                        var res: ResA = cast(res);
-                        res.i.should.be(42);
-                    }
-                    default: {}
-                }
+                var res: ResA = universe.getResource(ResA.HashCode());
+                res.should.not.be(null);
+                res.i.should.be(42);
             });
 
             it("should only keep track of a single resource per type", {
                 universe.setResource(new ResA(42));
                 universe.setResource(new ResA(30));
-                var res = universe.getResource(ResA.HashCode());
-                res.should.not.equal(Option.None);
-                switch(res) {
-                    case Some(res): {
-                        var res: ResA = cast(res);
-                        res.i.should.be(30);
-                    }
-                    default: {}
-                }
+                var res: ResA = universe.getResource(ResA.HashCode());
+                res.should.not.be(null);
+                res.i.should.be(30);
             });
         });
     }
