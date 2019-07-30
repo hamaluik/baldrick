@@ -98,7 +98,7 @@ class TestMain extends buddy.SingleSuite {
                 ]);
                 p.match(e1);
                 p.ents.count().should.be(1);
-                e1.removeByType(CompA.HashCode());
+                e1.removeByType(CompA);
                 p.match(e1);
                 p.ents.count().should.be(0);
             });
@@ -213,9 +213,9 @@ class TestMain extends buddy.SingleSuite {
                 universe.entities.length.should.be(0);
                 universe.loadEntities(state);
                 universe.entities.length.should.be(1);
-                var ca:CompA = universe.entities[0].get(CompA.HashCode());
+                var ca:CompA = universe.entities[0].get(CompA);
                 ca.a.should.be(4.2);
-                var cb:CompB = universe.entities[0].get(CompB.HashCode());
+                var cb:CompB = universe.entities[0].get(CompB);
                 cb.b.should.be(42);
             });
         });

@@ -112,18 +112,14 @@ class Universe {
     }
 
     /**
-     * Get a resource / global component from the Universe. If an instance
-     * has not yet been set using `setResource`, this will return `null`
-     * @param cls The class of the resource to retrieve
-     * @return Null<T>
+      Get a resource / global component from the Universe. If an instance
+      has not yet been set using `setResource`, this will return `null`
+      @param cls The class of the resource to retrieve
+      @return Null<T>
      */
     public function getResource<T: Resource>(cls: Class<T>): Null<T> {
-        var hashCodeFunc: Void -> Int = Reflect.field(cls, 'HashCode');
-        var hashCode: Int = hashCodeFunc();
-        if(!resources.exists(hashCode)) {
-            return null;
-        }
-        return cast(resources.get(hashCode));
+        var getHashCode: Void -> Int = Reflect.field(cls, 'HashCode');
+        return getResourceByID(getHashCode());
     }
 
     @:keep

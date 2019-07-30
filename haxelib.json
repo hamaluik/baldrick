@@ -5,8 +5,8 @@
     "classPath": "src",
     "tags": ["cross", "utility"],
     "description": "Entity-component-system (ECS) framework, based heavily on edge",
-    "version": "1.3.0-alpha",
-    "releasenote": "Added per-universe resources alpha API",
+    "version": "2.0.0-alpha",
+    "releasenote": "Added class-based accessors so you don't need to call HashCode()",
     "contributors": ["FuzzyWuzzie"],
     "dependencies": {}
   }

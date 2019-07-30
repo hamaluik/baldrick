@@ -170,12 +170,12 @@ class ProcessorMacros {
                                                     for(tField in tFields) {
                                                         var compClassName:String = getVarFieldTypeName(tField);
                                                         var compClassID:Int = ComponentMacros.getTypeID(compClassName);
-                                                        ifNotHasExprs.push(macro !entity.has($v{compClassID}));
-                                                        ifHasExprs.push(macro entity.has($v{compClassID}));
+                                                        ifNotHasExprs.push(macro !entity.hasID($v{compClassID}));
+                                                        ifHasExprs.push(macro entity.hasID($v{compClassID}));
                                                         objExprs.push({
                                                             field: tField.name,
                                                             expr: {
-                                                                expr: ECast(macro entity.get($v{compClassID}), getVarFieldComplexType(tField)),
+                                                                expr: ECast(macro entity.getByID($v{compClassID}), getVarFieldComplexType(tField)),
                                                                 pos: Context.currentPos()
                                                             }
                                                         });

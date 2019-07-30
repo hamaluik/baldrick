@@ -66,12 +66,32 @@ class Entity {
 
     /**
       Checks to see if the entity has a type of component
+      @param cls The class to check
+      @return Bool
+    */
+    public inline function has<T: Component>(cls: Class<T>): Bool {
+        var getHashCode: Void -> Int = Reflect.field(cls, 'HashCode');
+        return hasID(getHashCode());
+    }
+
+    /**
+      Checks to see if the entity has a type of component
       @param type The type to check. Can be queried at runtime
       using `Component.HashCode()` (`HashCode` is auto-generated).
       @return Bool
     */
-    public inline function has(type:ComponentTypeID):Bool {
+    public inline function hasID(type:ComponentTypeID):Bool {
         return components.exists(type);
+    }
+
+    /**
+      Gets the component with a specific type id
+      @param cls The class to query with
+      @return T
+    */
+    public inline function get<T: Component>(cls: Class<T>): Null<T> {
+        var getHashCode: Void -> Int = Reflect.field(cls, 'HashCode');
+        return getByID(getHashCode());
     }
 
     /**
@@ -79,7 +99,7 @@ class Entity {
       @param type The type id to query with
       @return T
     */
-    public inline function get<T:Component>(type:ComponentTypeID):T {
+    public inline function getByID<T:Component>(type:ComponentTypeID): Null<T> {
         return cast(components.get(type));
     }
 
@@ -106,11 +126,21 @@ class Entity {
     }
 
     /**
+      Remove a component by it's class, if it exists
+      @param cls the component class to remove
+      @return Entity
+     */
+    public inline function removeByType<T: Component>(cls: Class<T>): Entity {
+        var getHashCode: Void -> Int = Reflect.field(cls, 'HashCode');
+        return removeByID(getHashCode());
+    }
+
+    /**
       Remove a component by its type ID, if it exists
       @param type The type ID to remove
       @return Entity
     */
-    public inline function removeByType(type:ComponentTypeID):Entity {
+    public inline function removeByID(type:ComponentTypeID):Entity {
         components.remove(type);
         universe.match(this);
         return this;
@@ -121,7 +151,7 @@ class Entity {
       @param types The type IDs to remove
       @return Entity
     */
-    public inline function removeManyByType(types:Array<ComponentTypeID>):Entity {
+    public inline function removeManyByID(types:Array<ComponentTypeID>):Entity {
         for(t in types) components.remove(t);
         universe.match(this);
         return this;
