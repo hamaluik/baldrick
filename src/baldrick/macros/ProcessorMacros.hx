@@ -47,6 +47,7 @@ class ProcessorMacros {
         var hasMatchField:Bool = false;
         var hasUnmatch:Bool = false;
         var hasConstructor:Bool = false;
+        var hasUniverse:Bool = false;
         for(field in fields) {
             if(field.name == 'match') {
                 hasMatchField = true;
@@ -56,6 +57,9 @@ class ProcessorMacros {
             }
             else if(field.name == 'new') {
                 hasConstructor = true;
+            }
+            else if(field.name == 'universe') {
+                hasUniverse = true;
             }
         }
 
@@ -69,6 +73,10 @@ class ProcessorMacros {
 
         if(!hasConstructor) {
             fields = injectConstructor(fields);
+        }
+
+        if(!hasUniverse) {
+            fields = injectUniverse(fields);
         }
 
         var typeID:Int = getTypeID(Context.getLocalClass().get().name);
@@ -311,6 +319,16 @@ class ProcessorMacros {
             })
         });
 
+        return fields;
+    }
+
+    private static function injectUniverse(fields:Array<Field>):Array<Field> {
+        fields.push({
+            name:  "universe",
+            access:  [Access.APrivate],
+            kind: FieldType.FVar(macro:baldrick.Universe, macro $v{null}),
+            pos: Context.currentPos(),
+        });
         return fields;
     }
 

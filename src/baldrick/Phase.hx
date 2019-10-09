@@ -73,6 +73,7 @@ class Phase {
       @return Phase
     */
     public function addProcessor(processor:Processor):Phase {
+        processor.universe = universe;
         processors.push(processor);
         for(entity in universe.entities) {
             processor.match(entity);

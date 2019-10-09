@@ -41,6 +41,12 @@ interface Processor {
     */
     public function process():Void;
 
+    /**
+      The Universe in which the Processor exists. Assigned when
+      the Processor is added to a Phase.
+    */
+    private var universe:baldrick.Universe;
+
     #if profiling
     /**
       The fully-qualified name of the processor to be used when profiling
