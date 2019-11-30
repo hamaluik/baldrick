@@ -13,8 +13,8 @@ class MovementProcessor implements Processor {
 
     public function process():Void {
         for(view in moving) {
-            view.data.pos.x += view.data.vel.vx * timeDelta.resource.delta;
-            view.data.pos.y += view.data.vel.vy * timeDelta.resource.delta;
+            view.data.pos.x += view.data.vel.vx * timeDelta.delta;
+            view.data.pos.y += view.data.vel.vy * timeDelta.delta;
         }
     }
 }

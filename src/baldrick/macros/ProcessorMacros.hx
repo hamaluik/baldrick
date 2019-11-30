@@ -374,7 +374,7 @@ class ProcessorMacros {
                             if(p.name == 'ResourceView') {
                                 switch(p.params[0]) {
                                     case haxe.macro.TypeParam.TPType(t): {
-                                        setters.push(macro $i{field.name}.resource = universe.getResource($i{t.toString()}));
+                                        setters.push(macro $i{field.name} = universe.getResource($i{t.toString()}));
                                     }
                                     case _: {}
                                 }

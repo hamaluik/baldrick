@@ -10,9 +10,9 @@ class Main {
         var physics:Phase = universe.createPhase();
         var render:Phase = universe.createPhase();
         physics.addProcessor(new MovementProcessor());
-        render.addProcessor(new PrintProcessor());
+        render.addProcessor(new PrintProcessor(universe));
 
-        universe.setResource(new TimeDelta(1.0 / 60.0));
+        universe.setResource(new TimeDelta(0.5));
 
         universe.createEntity([
             new Position(0, 0),
@@ -27,6 +27,7 @@ class Main {
         for(i in 0...5) {
             physics.process();
             render.process();
+            universe.getResource(TimeDelta).delta += 0.5;
 
             #if profiling
             physicsTime += physics.profileTime;
