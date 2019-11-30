@@ -96,6 +96,9 @@ class Universe {
      */
     public function setResource(resource: Resource): Void {
         resources.set(resource.hashCode(), resource);
+        for(phase in phases) {
+            phase.applyResources();
+        }
     }
 
     /**

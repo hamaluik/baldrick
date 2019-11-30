@@ -40,6 +40,10 @@ The key features of this library include:
   * Macros then build the code to populate and manage `views`
   * The processor is then responsible for iterating over `views`, which iterates over matched entities with references to the components of interest extracted out
   * See the samples & API docs for more clarification
+* Processors can also access `resource views`
+  * Processors define `ResourceView` variables, with types referring to the `Resource`s that view is interested in
+  * Macros then build the code to populate `resource views`
+  * See the samples for more details
 * Universe-entity serialization
   * Using the built-in Haxe serializer / unserializer, `universes` can store and load their entity states using strings
 * Integration with [turnip](https://github.com/hamaluik/turnip)

@@ -7,4 +7,4 @@
 #--times
 #-D macro-times
 
--js bin/sample.js
+--interp

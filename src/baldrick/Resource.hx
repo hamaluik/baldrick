@@ -6,7 +6,7 @@ package baldrick;
   in that there can only ever be a single resource of each type
   in a universe at once.
 */
-@:autoBuild(baldrick.macros.ComponentMacros.process())
+@:autoBuild(baldrick.macros.ResourceMacros.process())
 interface Resource {
     /**
       The unique type ID for the resource class

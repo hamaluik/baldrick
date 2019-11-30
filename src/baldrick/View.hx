@@ -22,7 +22,8 @@ import haxe.ds.HashMap;
   }
   ```
 */
-class View<T:{}> {
+@:generic
+class View<T: {}> {
     private var matches:HashMap<Entity, ViewData<T>> = new HashMap<Entity, ViewData<T>>();
     public function new() {}
 

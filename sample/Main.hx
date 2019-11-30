@@ -2,6 +2,7 @@ import baldrick.Universe;
 import baldrick.Phase;
 import components.*;
 import processors.*;
+import resources.*;
 
 class Main {
     public static function main() {
@@ -10,6 +11,8 @@ class Main {
         var render:Phase = universe.createPhase();
         physics.addProcessor(new MovementProcessor());
         render.addProcessor(new PrintProcessor());
+
+        universe.setResource(new TimeDelta(1.0 / 60.0));
 
         universe.createEntity([
             new Position(0, 0),

@@ -107,4 +107,10 @@ class Phase {
 
         return removeProcessor(processor);
     }
+
+    private function applyResources() {
+        for(processor in processors) {
+            processor.setResources(universe);
+        }
+    }
 }

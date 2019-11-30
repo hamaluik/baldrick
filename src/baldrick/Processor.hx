@@ -35,6 +35,8 @@ interface Processor {
     */
     private function unmatch(entity:Entity):Void;
 
+    private function setResources(universe: Universe): Void;
+
     /**
       Called automatically by `Phase`s to process everything
       in the `View`s. Application logic goes here.

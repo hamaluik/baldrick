@@ -5,8 +5,7 @@ import baldrick.View;
 import components.Position;
 
 class PrintProcessor implements Processor {
-    var prints:View<{pos:Position}> = new View<{pos:Position}>();
-    public function new(){}
+    var prints:View<{pos:Position}>;
 
     public function process():Void {
         for(view in prints) {

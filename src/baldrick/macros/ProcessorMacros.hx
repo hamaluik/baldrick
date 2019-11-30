@@ -3,6 +3,7 @@ package baldrick.macros;
 import haxe.macro.Expr;
 import haxe.macro.Context;
 import haxe.ds.StringMap;
+using haxe.macro.ComplexTypeTools;
 
 import baldrick.ProcessorTypeID;
 
@@ -47,6 +48,7 @@ class ProcessorMacros {
         var hasMatchField:Bool = false;
         var hasUnmatch:Bool = false;
         var hasConstructor:Bool = false;
+        var hasSetResources: Bool = false;
         for(field in fields) {
             if(field.name == 'match') {
                 hasMatchField = true;
@@ -56,6 +58,9 @@ class ProcessorMacros {
             }
             else if(field.name == 'new') {
                 hasConstructor = true;
+            }
+            else if(field.name == 'setResources') {
+                hasSetResources = true;
             }
         }
 
@@ -69,6 +74,10 @@ class ProcessorMacros {
 
         if(!hasConstructor) {
             fields = injectConstructor(fields);
+        }
+
+        if(!hasSetResources) {
+            fields = injectSetResources(fields);
         }
 
         var typeID:Int = getTypeID(Context.getLocalClass().get().name);
@@ -325,6 +334,9 @@ class ProcessorMacros {
                             if(p.name == 'View') {
                                 initializers.push(macro $i{field.name} = new View());
                             }
+                            else if(p.name == 'ResourceView') {
+                                initializers.push(macro $i{field.name} = new ResourceView());
+                            }
                         }
                         default: {}
                     }
@@ -347,6 +359,65 @@ class ProcessorMacros {
                 expr: macro $b{initializers}
             })
         });
+
+        return fields;
+    }
+
+    private static function injectSetResources(fields: Array<Field>): Array<Field> {
+        var setters: Array<Expr> = [];
+        #if !display
+        for(field in fields) {
+            switch(field.kind) {
+                case FieldType.FVar(t, e): {
+                    switch(t) {
+                        case ComplexType.TPath(p): {
+                            if(p.name == 'ResourceView') {
+                                switch(p.params[0]) {
+                                    case haxe.macro.TypeParam.TPType(t): {
+                                        setters.push(macro $i{field.name}.resource = universe.getResource($i{t.toString()}));
+                                    }
+                                    case _: {}
+                                }
+                            }
+                        }
+                        default: {}
+                    }
+                }
+                default: {}
+            }
+        }
+        #end
+
+        var setResourcesField: Field = {
+            name: 'setResources',
+            access: [Access.APrivate, Access.AInline],
+            meta: null,
+            pos: Context.currentPos(),
+            doc: 'Auto-generated function responsible for setting resources',
+            kind: FieldType.FFun({
+                args: [{
+                    name: 'universe',
+                    meta: null,
+                    opt: false,
+                    value: null,
+                    type: ComplexType.TPath({
+                        name: 'Universe',
+                        pack: ['baldrick'],
+                        params: null,
+                        sub: null
+                    })
+                }],
+                params: null,
+                expr: macro $b{setters},
+                ret: ComplexType.TPath({
+                    name: 'Void',
+                    pack: [],
+                    params: null,
+                    sub: null
+                })
+            })
+        };
+        fields.push(setResourcesField);
 
         return fields;
     }
