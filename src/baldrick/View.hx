@@ -1,6 +1,6 @@
 package baldrick;
 
-import haxe.ds.HashMap;
+import haxe.ds.IntMap;
 
 /**
   Represents an array of entities matched to a specific typed group of components in
@@ -24,7 +24,7 @@ import haxe.ds.HashMap;
 */
 @:generic
 class View<T: {}> {
-    private var matches:HashMap<Entity, ViewData<T>> = new HashMap<Entity, ViewData<T>>();
+    private var matches:IntMap<ViewData<T>> = new IntMap<ViewData<T>>();
     public function new() {}
 
     /**
@@ -53,7 +53,7 @@ class View<T: {}> {
       @param data An anonymous structure which matches the components this view cares about
     */
     public function set(entity:Entity, data:T):Void {
-        matches.set(entity, new ViewData(entity, data));
+        matches.set(entity.id, new ViewData(entity, data));
         if(onEntityAdded != null) {
             onEntityAdded(entity, data);
         }
@@ -66,11 +66,11 @@ class View<T: {}> {
       @param entity The entity we're removing from this match
     */
     public function remove(entity:Entity):Void {
-        if(!matches.exists(entity)) {
+        if(!matches.exists(entity.id)) {
             return;
         }
 
-        var data:ViewData<T> = matches.get(entity);
+        var data:ViewData<T> = matches.get(entity.id);
         var rawData:T = null;
         if(data != null) {
             rawData = data.data;
@@ -79,6 +79,6 @@ class View<T: {}> {
             onEntityRemoved(entity, rawData);
         }
 
-        matches.remove(entity);
+        matches.remove(entity.id);
     }
 }
