@@ -77,6 +77,7 @@ class Phase {
         for(entity in universe.entities) {
             processor.match(entity);
         }
+        applyResources();
         return this;
     }
 
